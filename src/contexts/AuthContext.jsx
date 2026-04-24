@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
+import { signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signOut, onAuthStateChanged } from "firebase/auth";
 import { doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
 import { auth, db, facebookProvider } from "../config/firebase";
 
@@ -54,6 +54,41 @@ export function AuthProvider({ children }) {
     }
   }
 
+  async function loginWithEmail(email, password) {
+    try {
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      return result.user;
+    } catch (error) {
+      console.error("Email login error:", error);
+      throw error;
+    }
+  }
+
+  async function signUpWithEmail(name, email, password) {
+    try {
+      const result = await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(result.user, { displayName: name });
+      // Save to Firestore
+      await setDoc(doc(db, "users", result.user.uid), {
+        displayName: name,
+        email: email,
+        photoURL: "",
+        createdAt: serverTimestamp(),
+      });
+      // Update local state with the display name
+      setUser({
+        uid: result.user.uid,
+        displayName: name,
+        email: email,
+        photoURL: "",
+      });
+      return result.user;
+    } catch (error) {
+      console.error("Email signup error:", error);
+      throw error;
+    }
+  }
+
   async function logout() {
     await signOut(auth);
     setUser(null);
@@ -63,6 +98,8 @@ export function AuthProvider({ children }) {
     user,
     loading,
     loginWithFacebook,
+    loginWithEmail,
+    signUpWithEmail,
     logout,
   };
 
