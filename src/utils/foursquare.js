@@ -40,7 +40,7 @@ export async function searchPlaces(query) {
     headers: {
       "X-Places-Api-Version": "2025-06-17",
       accept: "application/json",
-      authorization: "Bearer V2URRQ0K0TCOMMEP5MMLBOF2EREW10MF4R0DGOVE2P0KEJJ1",
+      authorization: `Bearer ${import.meta.env.FOURSQUARE_KEY}`,
     },
   };
 
