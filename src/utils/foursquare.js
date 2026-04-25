@@ -44,8 +44,21 @@ export async function searchPlaces(query) {
     },
   };
 
-  fetch(url, options)
-    .then((res) => res.json())
-    .then((json) => console.log(json))
-    .catch((err) => console.error(err));
+  try {
+    const res = await fetch(url, options);
+    if (!res.ok) throw new Error("Foursquare API error");
+    const data = await res.json();
+    return (data.results || []).map((place) => ({
+      id: place.fsq_id,
+      name: place.name,
+      address:
+        place.location?.formatted_address || place.location?.address || "",
+      lat: place.geocodes?.main?.latitude || 0,
+      lng: place.geocodes?.main?.longitude || 0,
+      label: `${place.name}${place.location?.formatted_address ? ", " + place.location.formatted_address : ""}`,
+    }));
+  } catch (err) {
+    console.error("Foursquare search error:", err);
+    return [];
+  }
 }

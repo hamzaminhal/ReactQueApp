@@ -1,6 +1,5 @@
 import { useState, useRef } from "react";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "../config/firebase";
+import { uploadToCloudinary } from "../utils/cloudinary";
 import { Upload, X, Image as ImageIcon } from "lucide-react";
 
 export default function ImageUpload({ value = [], onChange, max = 1, label = "Upload Image", folder = "uploads" }) {
@@ -20,10 +19,7 @@ export default function ImageUpload({ value = [], onChange, max = 1, label = "Up
     try {
       const urls = [];
       for (const file of toUpload) {
-        const fileName = `${folder}/${Date.now()}_${file.name}`;
-        const storageRef = ref(storage, fileName);
-        await uploadBytes(storageRef, file);
-        const url = await getDownloadURL(storageRef);
+        const url = await uploadToCloudinary(file, folder);
         urls.push(url);
       }
       const newImages = [...images, ...urls];

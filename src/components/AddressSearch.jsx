@@ -83,9 +83,9 @@ export default function AddressSearch({ value, onChange }) {
 
         {showDropdown && results.length > 0 && (
           <div className="absolute z-20 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl overflow-hidden">
-            {results.map((place) => (
+            {results.map((place, index) => (
               <button
-                key={place.id}
+                key={place.id || index}
                 type="button"
                 onClick={() => selectPlace(place)}
                 className="w-full text-left px-4 py-3 flex items-start gap-3 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 transition-colors border-b border-gray-100 dark:border-gray-700 last:border-b-0"
