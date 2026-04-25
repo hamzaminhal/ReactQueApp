@@ -52,7 +52,10 @@ export default function AddressSearch({ value, onChange }) {
     <div className="space-y-3">
       <div className="relative">
         <div className="relative">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <Search
+            size={16}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+          />
           <input
             type="text"
             value={query}
@@ -89,19 +92,26 @@ export default function AddressSearch({ value, onChange }) {
               >
                 <MapPin size={16} className="text-indigo-500 mt-0.5 shrink-0" />
                 <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">{place.name}</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">{place.address}</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">
+                    {place.name}
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    {place.address}
+                  </p>
                 </div>
               </button>
             ))}
           </div>
         )}
 
-        {showDropdown && results.length === 0 && !searching && query.length >= 3 && (
-          <div className="absolute z-20 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl p-4 text-center text-sm text-gray-500 dark:text-gray-400">
-            No places found
-          </div>
-        )}
+        {showDropdown &&
+          results.length === 0 &&
+          !searching &&
+          query.length >= 3 && (
+            <div className="absolute z-20 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl p-4 text-center text-sm text-gray-500 dark:text-gray-400">
+              No places found
+            </div>
+          )}
       </div>
 
       {value?.lat && value?.lng && (
