@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { searchPlaces } from "../utils/foursquare";
+import { searchPlaces } from "../utils/googlePlaces";
 import MapView from "./MapView";
 import { MapPin, Search, X } from "lucide-react";
 
@@ -61,7 +61,7 @@ export default function AddressSearch({ value, onChange }) {
             value={query}
             onChange={handleInputChange}
             onFocus={() => results.length > 0 && setShowDropdown(true)}
-            placeholder="Search address via Foursquare..."
+            placeholder="Search address..."
             className="w-full pl-10 pr-10 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 transition-all text-sm"
           />
           {query && (
