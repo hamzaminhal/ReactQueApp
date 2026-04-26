@@ -50,7 +50,26 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Leaflet z-index fix */
+/* Leaflet overrides — Tailwind v4 preflight breaks tile rendering */
 .leaflet-container {
   z-index: 0 !important;
+}
+
+.leaflet-tile-pane img,
+.leaflet-marker-pane img,
+.leaflet-shadow-pane img,
+.leaflet-overlay-pane img {
+  max-width: none !important;
+  max-height: none !important;
+  border: none !important;
+}
+
+.leaflet-control-zoom a {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 12px !important;
 }

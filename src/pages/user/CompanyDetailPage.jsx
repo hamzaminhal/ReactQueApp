@@ -102,9 +102,9 @@ export default function CompanyDetailPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors">
       <Navbar />
-      <main className="max-w-3xl mx-auto px-4 py-8 pb-24 sm:pb-8">
+      <main className="max-w-3xl mx-auto px-4 py-8 pb-24 sm:pb-8 space-y-6">
         {/* Company header */}
-        <div className="p-6 rounded-3xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm mb-6 animate-fade-in">
+        <div className="relative z-10 p-6 rounded-3xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 shadow-sm animate-fade-in">
           <div className="flex items-start gap-4 mb-6">
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 shrink-0">
               <Building2 size={28} className="text-white" />
@@ -132,16 +132,20 @@ export default function CompanyDetailPage() {
 
           {/* Address & Map */}
           {company.address?.label && (
-            <div className="mb-4">
+            <div>
               <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex items-center gap-1"><MapPin size={14} />Address</h3>
               <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">{company.address.label}</p>
-              {company.address.lat && company.address.lng && <MapView lat={company.address.lat} lng={company.address.lng} className="h-48" />}
+              {company.address.lat && company.address.lng && (
+                <div className="relative z-0">
+                  <MapView lat={company.address.lat} lng={company.address.lng} label={company.name} className="h-48" />
+                </div>
+              )}
             </div>
           )}
         </div>
 
         {/* Token status */}
-        <div className="grid sm:grid-cols-3 gap-4 mb-6 animate-fade-in-up">
+        <div className="relative z-10 grid sm:grid-cols-3 gap-4 animate-fade-in-up">
           <div className="p-5 rounded-2xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-center">
             <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Total Tokens</p>
             <p className="text-3xl font-bold text-gray-900 dark:text-white">{company.totalTokens || 0}</p>
@@ -157,43 +161,45 @@ export default function CompanyDetailPage() {
         </div>
 
         {/* My token or Buy button */}
-        {myToken ? (
-          <div className="p-6 rounded-2xl bg-indigo-50 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-800 animate-fade-in-up">
-            <div className="flex items-center gap-2 mb-4">
-              <CheckCircle size={18} className="text-indigo-500" />
-              <h3 className="font-bold text-gray-900 dark:text-white">Your Token</h3>
-            </div>
-            <div className="grid sm:grid-cols-3 gap-4 mb-4">
-              <div className="text-center">
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Token Number</p>
-                <p className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">#{myToken.tokenNumber}</p>
+        <div className="relative z-10">
+          {myToken ? (
+            <div className="p-6 rounded-2xl bg-indigo-50 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-800 animate-fade-in-up">
+              <div className="flex items-center gap-2 mb-4">
+                <CheckCircle size={18} className="text-indigo-500" />
+                <h3 className="font-bold text-gray-900 dark:text-white">Your Token</h3>
               </div>
-              <div className="text-center">
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Status</p>
-                <p className="text-lg font-semibold text-gray-900 dark:text-white capitalize">{myToken.status}</p>
+              <div className="grid sm:grid-cols-3 gap-4 mb-4">
+                <div className="text-center">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Token Number</p>
+                  <p className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">#{myToken.tokenNumber}</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Status</p>
+                  <p className="text-lg font-semibold text-gray-900 dark:text-white capitalize">{myToken.status}</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Estimated Wait</p>
+                  <p className="text-lg font-semibold text-gray-900 dark:text-white">{formatWaitTime(estimatedTime)}</p>
+                </div>
               </div>
-              <div className="text-center">
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Estimated Wait</p>
-                <p className="text-lg font-semibold text-gray-900 dark:text-white">{formatWaitTime(estimatedTime)}</p>
-              </div>
-            </div>
-            <button onClick={cancelToken} disabled={cancelling} className="w-full py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white font-medium text-sm transition-colors disabled:opacity-50">
-              {cancelling ? "Cancelling..." : "Cancel Token"}
-            </button>
-          </div>
-        ) : (
-          <div className="animate-fade-in-up">
-            {company.tokensAllowed ? (
-              <button onClick={() => setShowBuyModal(true)} className="w-full py-4 rounded-2xl bg-gradient-to-r from-indigo-500 to-violet-600 text-white font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all active:scale-[0.98]">
-                <span className="flex items-center justify-center gap-2"><Ticket size={18} />Buy Token</span>
+              <button onClick={cancelToken} disabled={cancelling} className="w-full py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white font-medium text-sm transition-colors disabled:opacity-50">
+                {cancelling ? "Cancelling..." : "Cancel Token"}
               </button>
-            ) : (
-              <div className="p-6 rounded-2xl bg-gray-100 dark:bg-gray-800 text-center">
-                <p className="text-gray-500 dark:text-gray-400 text-sm">Tokens are not available right now</p>
-              </div>
-            )}
-          </div>
-        )}
+            </div>
+          ) : (
+            <div className="animate-fade-in-up">
+              {company.tokensAllowed ? (
+                <button onClick={() => setShowBuyModal(true)} className="w-full py-4 rounded-2xl bg-gradient-to-r from-indigo-500 to-violet-600 text-white font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all active:scale-[0.98]">
+                  <span className="flex items-center justify-center gap-2"><Ticket size={18} />Buy Token</span>
+                </button>
+              ) : (
+                <div className="p-6 rounded-2xl bg-gray-100 dark:bg-gray-800 text-center">
+                  <p className="text-gray-500 dark:text-gray-400 text-sm">Tokens are not available right now</p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </main>
 
       {/* Buy Modal */}
