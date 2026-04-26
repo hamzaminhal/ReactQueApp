@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signOut, onAuthStateChanged } from "firebase/auth";
 import { doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
-import { auth, db, facebookProvider } from "../config/firebase";
+import { auth, db, facebookProvider, googleProvider } from "../config/firebase";
 
 const AuthContext = createContext(null);
 
@@ -54,6 +54,17 @@ export function AuthProvider({ children }) {
     }
   }
 
+  async function loginWithGoogle() {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      return result.user;
+    } catch (error) {
+      console.error("Google login error:", error);
+      throw error;
+    }
+  }
+
+
   async function loginWithEmail(email, password) {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
@@ -98,6 +109,7 @@ export function AuthProvider({ children }) {
     user,
     loading,
     loginWithFacebook,
+    loginWithGoogle,
     loginWithEmail,
     signUpWithEmail,
     logout,
